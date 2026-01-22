@@ -8,7 +8,11 @@ function App() {
       <TopBar />
       <main className="flex flex-1">
         <TranscriptPane />
-        <Sidebar />
+        <Sidebar
+          isListening
+          filePath="/Users/Design/Documents/Notes"
+          fileName="meeting-oct24.txt"
+        />
       </main>
     </div>
   );
