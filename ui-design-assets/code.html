@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Real-Time Meeting Transcriber</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                        "surface-dark": "#1e293b",
+                        "surface-light": "#ffffff",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569; 
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display h-screen flex flex-col overflow-hidden selection:bg-primary/30 selection:text-white">
+<!-- Top Navigation Bar -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-[#282e39] px-6 py-3 bg-surface-light dark:bg-[#111318] z-20 shrink-0">
+<div class="flex items-center gap-4">
+<div class="flex items-center justify-center size-8 rounded-lg bg-primary/10 text-primary">
+<span class="material-symbols-outlined text-[24px]">graphic_eq</span>
+</div>
+<h2 class="text-lg font-bold leading-tight tracking-[-0.015em] hidden sm:block">Meeting Scribe</h2>
+<!-- Status Chip -->
+<div class="flex h-7 shrink-0 items-center justify-center gap-x-2 rounded-full bg-slate-100 dark:bg-[#282e39] pl-2 pr-3 ml-2">
+<span class="material-symbols-outlined text-green-500 text-[14px] animate-pulse" style="font-variation-settings: 'FILL' 1">fiber_manual_record</span>
+<p class="text-slate-600 dark:text-slate-200 text-xs font-medium leading-normal">Listening...</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center justify-center size-9 rounded-lg hover:bg-slate-100 dark:hover:bg-[#282e39] text-slate-500 dark:text-slate-400 transition-colors">
+<span class="material-symbols-outlined text-[20px]">help</span>
+</button>
+<button class="flex items-center justify-center size-9 rounded-lg hover:bg-slate-100 dark:hover:bg-[#282e39] text-slate-500 dark:text-slate-400 transition-colors">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden bg-gradient-to-br from-primary to-purple-600 ml-2 border border-slate-200 dark:border-slate-700" data-alt="User Avatar Gradient"></div>
+</div>
+</header>
+<!-- Main Layout -->
+<main class="flex flex-1 overflow-hidden relative">
+<!-- Transcription Canvas (Left/Center) -->
+<section class="flex-1 flex flex-col min-w-0 bg-background-light dark:bg-background-dark relative">
+<!-- Scrollable Text Area -->
+<div class="flex-1 overflow-y-auto p-4 md:p-8 lg:px-12 scroll-smooth">
+<div class="max-w-4xl mx-auto flex flex-col gap-6 min-h-full pb-20">
+<!-- Date Separator -->
+<div class="flex items-center gap-4 py-4">
+<div class="h-px bg-slate-300 dark:bg-slate-700 flex-1"></div>
+<span class="text-xs font-medium text-slate-500 uppercase tracking-wider">Today, Oct 24</span>
+<div class="h-px bg-slate-300 dark:bg-slate-700 flex-1"></div>
+</div>
+<!-- Transcript Blocks -->
+<div class="flex gap-4 group">
+<div class="w-8 shrink-0 flex flex-col items-center pt-1">
+<span class="text-xs text-slate-400 font-mono">10:02</span>
+</div>
+<div class="flex-1">
+<p class="text-slate-800 dark:text-slate-100 text-base md:text-lg leading-relaxed">
+                                Alright everyone, let's get started. Thanks for joining on such short notice. We need to go over the Q3 performance metrics before the board meeting tomorrow.
+                            </p>
+</div>
+</div>
+<div class="flex gap-4 group">
+<div class="w-8 shrink-0 flex flex-col items-center pt-1">
+<span class="text-xs text-slate-400 font-mono">10:03</span>
+</div>
+<div class="flex-1">
+<p class="text-slate-800 dark:text-slate-100 text-base md:text-lg leading-relaxed">
+                                Looking at the acquisition channels, the organic search traffic has increased by 15% month over month. That's a strong signal that our SEO strategy is finally paying off.
+                            </p>
+</div>
+</div>
+<div class="flex gap-4 group">
+<div class="w-8 shrink-0 flex flex-col items-center pt-1">
+<span class="text-xs text-slate-400 font-mono">10:04</span>
+</div>
+<div class="flex-1">
+<p class="text-slate-800 dark:text-slate-100 text-base md:text-lg leading-relaxed">
+                                However, paid social seems to be lagging behind. The CPC has gone up significantly on LinkedIn ads.
+                            </p>
+</div>
+</div>
+<!-- Interim Text Block (Active) -->
+<div class="flex gap-4 group animate-pulse">
+<div class="w-8 shrink-0 flex flex-col items-center pt-1">
+<span class="text-xs text-primary font-mono font-bold">LIVE</span>
+</div>
+<div class="flex-1">
+<p class="text-base md:text-lg leading-relaxed">
+<span class="text-slate-800 dark:text-slate-100">I think we should consider reallocating some budget to </span>
+<span class="text-slate-500 dark:text-slate-400 italic">Google Ads instead because the intent is higher there... wait, let me pull up the chart... yes, the conversion rate is double.</span>
+<span class="inline-block w-2 h-5 bg-primary align-middle ml-1 animate-pulse rounded-sm"></span>
+</p>
+</div>
+</div>
+<!-- Bottom Spacer so text doesn't hit the very bottom edge -->
+<div class="h-10"></div>
+</div>
+</div>
+<!-- Floating Overlay Actions (Mobile/Tablet friendly) -->
+<div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 lg:hidden">
+<button class="h-14 w-14 rounded-full bg-red-500 shadow-lg shadow-red-500/20 flex items-center justify-center text-white hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1">stop</span>
+</button>
+</div>
+</section>
+<!-- Sidebar (Right) - Controls -->
+<aside class="w-80 shrink-0 bg-surface-light dark:bg-[#151a23] border-l border-slate-200 dark:border-[#282e39] flex flex-col z-20 hidden lg:flex shadow-xl shadow-black/10">
+<div class="p-6 flex flex-col gap-8 h-full">
+<!-- Primary Controls -->
+<div class="flex flex-col gap-4">
+<h3 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Controls</h3>
+<!-- Stop Button (Active State) -->
+<button class="group flex items-center justify-center gap-3 w-full h-12 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-red-500 rounded-xl transition-all">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform" style="font-variation-settings: 'FILL' 1">stop_circle</span>
+<span class="font-semibold">Stop Recording</span>
+</button>
+<!-- Start Button (Inactive State - Hidden logically but shown for design completeness if needed, here we show stop because status is listening) -->
+<!-- 
+                    <button class="group flex items-center justify-center gap-3 w-full h-12 bg-primary hover:bg-blue-600 text-white rounded-xl shadow-lg shadow-blue-500/20 transition-all">
+                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">mic</span>
+                        <span class="font-semibold">Start Recording</span>
+                    </button> 
+                    -->
+<div class="grid grid-cols-2 gap-3">
+<button class="flex flex-col items-center justify-center gap-2 h-20 bg-slate-50 dark:bg-[#1e293b] hover:bg-slate-100 dark:hover:bg-[#282e39] border border-slate-200 dark:border-slate-700 rounded-xl text-slate-600 dark:text-slate-300 transition-colors">
+<span class="material-symbols-outlined">content_copy</span>
+<span class="text-xs font-medium">Copy All</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-2 h-20 bg-slate-50 dark:bg-[#1e293b] hover:bg-red-50 dark:hover:bg-red-900/10 border border-slate-200 dark:border-slate-700 hover:border-red-200 dark:hover:border-red-900/30 rounded-xl text-slate-600 dark:text-slate-300 hover:text-red-600 dark:hover:text-red-400 transition-colors">
+<span class="material-symbols-outlined">delete</span>
+<span class="text-xs font-medium">Clear</span>
+</button>
+</div>
+</div>
+<!-- File Management -->
+<div class="flex flex-col gap-4">
+<h3 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">File Output</h3>
+<div class="p-4 rounded-xl bg-slate-50 dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700 flex flex-col gap-3">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-slate-400 mt-0.5">folder_open</span>
+<div class="flex flex-col min-w-0">
+<span class="text-xs text-slate-500 dark:text-slate-400">Saving to:</span>
+<span class="text-sm font-medium text-slate-700 dark:text-slate-200 truncate" title="/Users/Design/Documents/Notes">/Users/Design/Do...</span>
+</div>
+</div>
+<div class="h-px bg-slate-200 dark:bg-slate-700 w-full"></div>
+<div class="flex items-center justify-between">
+<span class="text-xs text-slate-400">meeting-oct24.txt</span>
+<button class="text-xs font-bold text-primary hover:text-blue-400 transition-colors">Change</button>
+</div>
+</div>
+<div class="flex items-center gap-2 px-1">
+<span class="material-symbols-outlined text-slate-400 text-[18px]">timer</span>
+<p class="text-xs text-slate-500 dark:text-slate-400">Autosaves every 30 seconds</p>
+</div>
+</div>
+<!-- Spacer -->
+<div class="flex-1"></div>
+<!-- Empty State Example (Miniaturized for context or future use) -->
+<!-- Ideally hidden, but showing structure for robust design -->
+<div class="hidden flex-col items-center gap-4 rounded-lg border-2 border-dashed border-[#3b4354] px-4 py-8 text-center opacity-50">
+<p class="text-slate-300 text-sm font-medium">Ready to transcribe</p>
+</div>
+<!-- Version Info -->
+<div class="flex flex-col gap-1 pb-2">
+<p class="text-[10px] text-slate-400 text-center">Version 1.0.4 • Chrome Recommended</p>
+</div>
+</div>
+</aside>
+</main>
+<!-- Toast Notification (Fixed Position) -->
+<div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-4 py-3 bg-surface-dark dark:bg-white text-white dark:text-slate-900 rounded-full shadow-2xl transform transition-all duration-300 translate-y-0 opacity-100">
+<span class="material-symbols-outlined text-green-400 dark:text-green-600 text-[20px]" style="font-variation-settings: 'FILL' 1">check_circle</span>
+<span class="text-sm font-medium pr-1">Transcript saved successfully</span>
+</div>
+</body></html>
