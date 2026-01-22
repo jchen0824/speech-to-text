@@ -3,27 +3,6 @@ import { startAutosave, requestOutputFile } from "../lib/fileOutput";
 import { buildRecognition } from "../lib/speechRecognition";
 import type { TranscriptItem } from "../types/transcript";
 
-const initialTranscript: TranscriptItem[] = [
-  {
-    id: "1",
-    time: "10:02",
-    text: "Alright everyone, let's get started. Thanks for joining on such short notice. We need to go over the Q3 performance metrics before the board meeting tomorrow.",
-  },
-  {
-    id: "2",
-    time: "10:03",
-    text: "Looking at the acquisition channels, the organic search traffic has increased by 15% month over month. That's a strong signal that our SEO strategy is finally paying off.",
-  },
-  {
-    id: "3",
-    time: "10:04",
-    text: "However, paid social seems to be lagging behind. The CPC has gone up significantly on LinkedIn ads.",
-  },
-];
-
-const initialLiveText =
-  "I think we should consider reallocating some budget to Google Ads instead because the intent is higher there... wait, let me pull up the chart... yes, the conversion rate is double.";
-
 const TOAST_DURATION_MS = 3000;
 
 const formatTimestamp = (date = new Date()) =>
@@ -42,9 +21,9 @@ const createId = () => {
 };
 
 const useTranscription = () => {
-  const [isListening, setIsListening] = useState(true);
-  const [items, setItems] = useState<TranscriptItem[]>(initialTranscript);
-  const [liveText, setLiveText] = useState(initialLiveText);
+  const [isListening, setIsListening] = useState(false);
+  const [items, setItems] = useState<TranscriptItem[]>([]);
+  const [liveText, setLiveText] = useState("");
   const [toastMessage, setToastMessage] = useState("Transcript saved successfully");
   const [isToastOpen, setIsToastOpen] = useState(false);
   const [filePath, setFilePath] = useState("/Users/Design/Documents/Notes");

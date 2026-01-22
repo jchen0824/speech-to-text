@@ -21,6 +21,14 @@ beforeEach(() => {
   stopMock.mockClear();
 });
 
+it("starts idle with an empty transcript", () => {
+  const { result } = renderHook(() => useTranscription());
+
+  expect(result.current.isListening).toBe(false);
+  expect(result.current.items).toEqual([]);
+  expect(result.current.liveText).toBe("");
+});
+
 it("toggles listening state", () => {
   const { result } = renderHook(() => useTranscription());
 
