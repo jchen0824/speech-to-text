@@ -9,35 +9,36 @@ type TranscriptPaneProps = {
 
 const TranscriptPane = ({ items = [], liveText = "" }: TranscriptPaneProps) => {
   return (
-    <section className="flex flex-1 flex-col gap-4 px-6 py-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-            Transcript
-          </p>
-          <h2 className="text-lg font-semibold text-slate-900">Meeting notes</h2>
-        </div>
-        <div className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-500">
-          Draft
+    <section className="relative flex flex-1 flex-col min-w-0 bg-background-light dark:bg-background-dark">
+      <div className="flex-1 overflow-y-auto p-4 md:p-8 lg:px-12 scroll-smooth">
+        <div className="max-w-4xl mx-auto flex flex-col gap-6 min-h-full pb-20">
+          <div className="flex items-center gap-4 py-4">
+            <div className="h-px bg-slate-300 dark:bg-slate-700 flex-1" />
+            <span className="text-xs font-medium text-slate-500 uppercase tracking-wider">
+              Today, Oct 24
+            </span>
+            <div className="h-px bg-slate-300 dark:bg-slate-700 flex-1" />
+          </div>
+          {items.map((item) => (
+            <TranscriptItem key={item.id} item={item} />
+          ))}
+          {liveText ? <LiveTranscriptItem text={liveText} /> : null}
+          <div className="h-10" />
         </div>
       </div>
-
-      <div className="flex min-h-[420px] flex-1 flex-col gap-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-        <div className="flex items-center gap-4 py-2">
-          <div className="h-px flex-1 bg-slate-200" />
-          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-            Today, Oct 24
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 lg:hidden">
+        <button
+          className="h-14 w-14 rounded-full bg-red-500 shadow-lg shadow-red-500/20 flex items-center justify-center text-white hover:scale-105 transition-transform"
+          type="button"
+          aria-label="Stop recording"
+        >
+          <span
+            className="material-symbols-outlined text-[28px]"
+            style={{ fontVariationSettings: "'FILL' 1" }}
+          >
+            stop
           </span>
-          <div className="h-px flex-1 bg-slate-200" />
-        </div>
-        <div className="flex-1 overflow-y-auto pr-2">
-          <div className="flex flex-col gap-6">
-            {items.map((item) => (
-              <TranscriptItem key={item.id} item={item} />
-            ))}
-            {liveText ? <LiveTranscriptItem text={liveText} /> : null}
-          </div>
-        </div>
+        </button>
       </div>
     </section>
   );
