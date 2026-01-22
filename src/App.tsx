@@ -21,7 +21,7 @@ function App() {
   } = useTranscription();
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50 text-slate-900">
+    <div className="flex min-h-screen flex-col bg-background-light text-slate-900 dark:bg-background-dark dark:text-white">
       <TopBar isListening={isListening} />
       <main className="flex flex-1">
         <TranscriptPane items={items} liveText={liveText} />

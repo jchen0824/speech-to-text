@@ -23,10 +23,10 @@ const Sidebar = ({
   onChangeFile,
 }: SidebarProps) => {
   return (
-    <aside className="hidden w-80 flex-col border-l border-slate-200 bg-white lg:flex">
+    <aside className="hidden w-80 flex-col border-l border-slate-200 bg-surface-light dark:border-[#282e39] dark:bg-[#151a23] lg:flex">
       <div className="flex h-full flex-col gap-8 p-6">
         <section className="flex flex-col gap-4">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500">
+          <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
             Controls
           </h2>
           <ControlsPanel
@@ -39,7 +39,7 @@ const Sidebar = ({
         </section>
 
         <section className="flex flex-col gap-4">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500">
+          <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
             File Output
           </h2>
           <FileOutputCard
@@ -47,7 +47,7 @@ const Sidebar = ({
             fileName={fileName}
             onChange={onChangeFile}
           />
-          <div className="flex items-center gap-2 px-1 text-xs text-slate-500">
+          <div className="flex items-center gap-2 px-1 text-xs text-slate-500 dark:text-slate-400">
             <span className="material-symbols-outlined text-base text-slate-400">
               timer
             </span>
