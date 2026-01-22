@@ -26,6 +26,7 @@ Planned stack is Vite + React (Chrome-only Web Speech API).
 
 ## Commit & Pull Request Guidelines
 - Use Conventional Commits without bracketed tags (e.g., `feat: add autosave timer`, `fix: handle mic permission denial`). Keep subjects imperative.
+- Commit hook: append `[ai:n]` to avoid the auto-added `[ai-assisted]` tag; `[ai:y]` prepends `[ai-assisted]`, and the hook strips the `[ai:n]` marker before saving.
 - PRs should include: summary of changes, test notes (`npm run test` output or “not run”), and screenshots for UI changes.
 - Link relevant issues or design doc sections where possible.
 
