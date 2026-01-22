@@ -8,6 +8,8 @@
 
 **Tech Stack:** React, TypeScript, Vite, Tailwind CSS (for parity with the provided HTML), Vitest + React Testing Library.
 
+**Mockup References:** `ui-design-assets/screen.png`, `ui-design-assets/code.html`
+
 ### Task 1: Scaffold app + Tailwind base
 
 **Files:**
@@ -86,9 +88,9 @@ Expected: FAIL because layout components are missing.
 
 **Step 3: Write minimal implementation**
 
-- Implement `TopBar` with logo, title, listening chip, help/settings icons, avatar gradient.
-- Implement `Sidebar` container with section headers.
-- Implement `TranscriptPane` container with scroll area.
+- Implement `TopBar` with logo, title, listening chip, help/settings icon buttons (add `aria-label`), and avatar gradient.
+- Implement `Sidebar` container with section headers and layout shell.
+- Implement `TranscriptPane` container with scroll area and the date separator line.
 - Wire `App` layout to match the mockup (flex split; sidebar hidden under lg).
 
 **Step 4: Run test to verify it passes**
@@ -139,8 +141,9 @@ Expected: FAIL because components are missing.
 **Step 3: Write minimal implementation**
 
 - Define `TranscriptItem` type with `id`, `time`, `text`.
-- Render date separator line and transcript rows as in mockup.
-- Render live row with italic interim text and blinking caret.
+- Render transcript rows as in mockup (time column + body).
+- Render live row with "LIVE" label, italic interim text, and blinking caret.
+- Add the floating stop button for small screens only (`lg:hidden`) anchored at bottom center.
 
 **Step 4: Run test to verify it passes**
 
@@ -194,7 +197,8 @@ Expected: FAIL because components are missing.
 - Implement primary stop/start button styles and layout.
 - Implement `Copy All` and `Clear` tiles.
 - Implement file output card with path, filename, and Change link.
-- Add toast component matching mockup style.
+- Add autosave indicator and version info in the sidebar footer.
+- Add toast component matching mockup style; toast appears only on save and auto-dismisses after a few seconds.
 
 **Step 4: Run test to verify it passes**
 
@@ -239,9 +243,10 @@ Expected: FAIL because hook is missing.
 
 **Step 3: Write minimal implementation**
 
-- Implement `useTranscription` with `isListening`, `items`, `liveText`.
+- Implement `useTranscription` with `isListening`, `items`, `liveText`, and toast state.
 - Wire `Start/Stop`, `Copy All`, `Clear` actions (use clipboard API for copy).
 - Reflect listening state in the top bar chip and stop button.
+- Expose a `notifySaved()` helper to show the toast and auto-dismiss after a few seconds.
 
 **Step 4: Run test to verify it passes**
 
@@ -285,6 +290,7 @@ Expected: FAIL because helpers are missing.
 - Implement `buildRecognition()` wrapper around `window.SpeechRecognition`.
 - Implement autosave helpers using File System Access API with 30s interval.
 - Update hook to append finalized segments and update `liveText` from interim results.
+- Trigger `notifySaved()` after successful autosave to display the toast briefly.
 
 **Step 4: Run test to verify it passes**
 
