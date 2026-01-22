@@ -1,21 +1,35 @@
 import { act, renderHook } from "@testing-library/react";
 import { beforeEach, vi } from "vitest";
 
-const mocks = vi.hoisted(() => ({
-  startMock: vi.fn(),
-  stopMock: vi.fn(),
-  requestOutputFileMock: vi.fn(),
-  startAutosaveMock: vi.fn(() => () => {}),
-}));
+type MockRecognition = {
+  start: () => void;
+  stop: () => void;
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  onresult?: (event: SpeechRecognitionEvent) => void;
+  onerror?: (event: SpeechRecognitionErrorEvent) => void;
+  onend?: () => void;
+};
 
-vi.mock("../lib/speechRecognition", () => ({
-  buildRecognition: vi.fn(() => ({
-    start: mocks.startMock,
-    stop: mocks.stopMock,
+const mocks = vi.hoisted(() => {
+  const recognition: MockRecognition = {
+    start: vi.fn(),
+    stop: vi.fn(),
     continuous: false,
     interimResults: false,
     lang: "",
-  })),
+  };
+
+  return {
+    recognition,
+    requestOutputFileMock: vi.fn(),
+    startAutosaveMock: vi.fn(() => () => {}),
+  };
+});
+
+vi.mock("../lib/speechRecognition", () => ({
+  buildRecognition: vi.fn(() => mocks.recognition),
 }));
 
 vi.mock("../lib/fileOutput", () => ({
@@ -26,8 +40,11 @@ vi.mock("../lib/fileOutput", () => ({
 import useTranscription from "./useTranscription";
 
 beforeEach(() => {
-  mocks.startMock.mockClear();
-  mocks.stopMock.mockClear();
+  mocks.recognition.start = vi.fn();
+  mocks.recognition.stop = vi.fn();
+  mocks.recognition.onresult = undefined;
+  mocks.recognition.onerror = undefined;
+  mocks.recognition.onend = undefined;
   mocks.requestOutputFileMock.mockClear();
   mocks.startAutosaveMock.mockClear();
 });
@@ -41,6 +58,7 @@ it("starts idle with an empty transcript", () => {
 });
 
 it("toggles listening state", async () => {
+  mocks.requestOutputFileMock.mockResolvedValueOnce(null);
   const { result } = renderHook(() => useTranscription());
 
   await act(async () => {
@@ -53,15 +71,16 @@ it("toggles listening state", async () => {
 });
 
 it("starts and stops recognition", async () => {
+  mocks.requestOutputFileMock.mockResolvedValueOnce(null);
   const { result } = renderHook(() => useTranscription());
 
   await act(async () => {
     await result.current.start();
   });
-  expect(mocks.startMock).toHaveBeenCalledTimes(1);
+  expect(mocks.recognition.start).toHaveBeenCalledTimes(1);
 
   act(() => result.current.stop());
-  expect(mocks.stopMock).toHaveBeenCalledTimes(1);
+  expect(mocks.recognition.stop).toHaveBeenCalledTimes(1);
 });
 
 it("prompts for file selection on start when missing", async () => {
@@ -73,4 +92,30 @@ it("prompts for file selection on start when missing", async () => {
   });
 
   expect(mocks.requestOutputFileMock).toHaveBeenCalledTimes(1);
+});
+
+it("does not restart autosave on transcript updates", async () => {
+  const handle = { createWritable: vi.fn() } as unknown as FileSystemFileHandle;
+  mocks.requestOutputFileMock.mockResolvedValueOnce(handle);
+
+  const { result } = renderHook(() => useTranscription());
+
+  await act(async () => {
+    await result.current.start();
+  });
+
+  expect(mocks.startAutosaveMock).toHaveBeenCalledTimes(1);
+
+  act(() => {
+    mocks.recognition.onresult?.({
+      resultIndex: 0,
+      results: [
+        Object.assign([{ transcript: "Hello" }], {
+          isFinal: true,
+        }),
+      ],
+    } as unknown as SpeechRecognitionEvent);
+  });
+
+  expect(mocks.startAutosaveMock).toHaveBeenCalledTimes(1);
 });

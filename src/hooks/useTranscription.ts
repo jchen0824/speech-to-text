@@ -33,6 +33,7 @@ const useTranscription = () => {
   );
   const toastTimerRef = useRef<number | null>(null);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const transcriptRef = useRef("");
 
   const start = useCallback(async () => {
     try {
@@ -160,18 +161,22 @@ const useTranscription = () => {
   }, [items, liveText]);
 
   useEffect(() => {
+    transcriptRef.current = transcriptText;
+  }, [transcriptText]);
+
+  useEffect(() => {
     if (!fileHandle) {
       return undefined;
     }
 
     const stopAutosave = startAutosave({
-      getContent: () => transcriptText,
+      getContent: () => transcriptRef.current,
       getFileHandle: () => fileHandle,
       onSaved: () => notifySaved(),
     });
 
     return stopAutosave;
-  }, [fileHandle, transcriptText, notifySaved]);
+  }, [fileHandle, notifySaved]);
 
   useEffect(() => {
     return () => {
