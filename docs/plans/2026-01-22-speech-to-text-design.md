@@ -29,6 +29,7 @@ Build a local, front-end-only web app (Chrome on macOS) that captures microphone
 - Use `SpeechRecognition` for live transcription.
 - Use File System Access API for autosave to a selected file.
 - No server-side components.
+- UI matches the Meeting Scribe mockup in `ui-design-assets/`.
 
 ## Components
 - **ControlBar**: Start/Stop, Clear, Choose File, Status.
