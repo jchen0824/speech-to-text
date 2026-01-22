@@ -34,8 +34,17 @@ const useTranscription = () => {
   const toastTimerRef = useRef<number | null>(null);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
 
-  const start = useCallback(() => {
+  const start = useCallback(async () => {
     try {
+      if (!fileHandle) {
+        const handle = await requestOutputFile(fileName);
+        if (handle) {
+          setFileHandle(handle);
+          setFileName(handle.name || fileName);
+          setFilePath("Selected location");
+        }
+      }
+
       if (!recognitionRef.current) {
         recognitionRef.current = buildRecognition();
       }
@@ -85,7 +94,7 @@ const useTranscription = () => {
       console.error("Speech recognition unavailable", error);
       setIsListening(false);
     }
-  }, []);
+  }, [fileHandle, fileName]);
 
   const stop = useCallback(() => {
     recognitionRef.current?.stop();

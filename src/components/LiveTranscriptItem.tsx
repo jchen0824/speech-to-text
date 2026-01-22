@@ -9,8 +9,8 @@ const LiveTranscriptItem = ({ text }: LiveTranscriptItemProps) => {
         <span className="text-xs text-primary font-mono font-bold">LIVE</span>
       </div>
       <div className="flex-1">
-        <p className="text-base md:text-lg leading-relaxed">
-          <span className="text-slate-500 dark:text-slate-400 italic">{text}</span>
+        <p className="text-base md:text-lg leading-relaxed text-slate-900 dark:text-slate-100">
+          {text}
           <span className="inline-block w-2 h-5 bg-primary align-middle ml-1 animate-pulse rounded-sm" />
         </p>
       </div>

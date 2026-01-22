@@ -14,6 +14,27 @@ const getSpeechRecognitionConstructor = (): SpeechRecognitionConstructor | null 
   ) ?? null;
 };
 
+const pickRecognitionLanguage = () => {
+  if (typeof navigator === "undefined") {
+    return "en-US";
+  }
+
+  const languages = navigator.languages?.length
+    ? navigator.languages
+    : [navigator.language].filter(Boolean);
+
+  const normalized = languages.map((lang) => lang.toLowerCase());
+  if (normalized.some((lang) => lang.startsWith("zh"))) {
+    return "zh-CN";
+  }
+
+  if (normalized.some((lang) => lang.startsWith("en"))) {
+    return "en-US";
+  }
+
+  return navigator.language || "en-US";
+};
+
 export const buildRecognition = (): SpeechRecognition => {
   const SpeechRecognitionCtor = getSpeechRecognitionConstructor();
 
@@ -24,6 +45,6 @@ export const buildRecognition = (): SpeechRecognition => {
   const recognition = new SpeechRecognitionCtor();
   recognition.continuous = true;
   recognition.interimResults = true;
-  recognition.lang = "en-US";
+  recognition.lang = pickRecognitionLanguage();
   return recognition;
 };

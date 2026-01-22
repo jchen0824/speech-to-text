@@ -1,24 +1,35 @@
 import { act, renderHook } from "@testing-library/react";
 import { beforeEach, vi } from "vitest";
 
-const startMock = vi.fn();
-const stopMock = vi.fn();
+const mocks = vi.hoisted(() => ({
+  startMock: vi.fn(),
+  stopMock: vi.fn(),
+  requestOutputFileMock: vi.fn(),
+  startAutosaveMock: vi.fn(() => () => {}),
+}));
 
 vi.mock("../lib/speechRecognition", () => ({
   buildRecognition: vi.fn(() => ({
-    start: startMock,
-    stop: stopMock,
+    start: mocks.startMock,
+    stop: mocks.stopMock,
     continuous: false,
     interimResults: false,
     lang: "",
   })),
 }));
 
+vi.mock("../lib/fileOutput", () => ({
+  requestOutputFile: mocks.requestOutputFileMock,
+  startAutosave: mocks.startAutosaveMock,
+}));
+
 import useTranscription from "./useTranscription";
 
 beforeEach(() => {
-  startMock.mockClear();
-  stopMock.mockClear();
+  mocks.startMock.mockClear();
+  mocks.stopMock.mockClear();
+  mocks.requestOutputFileMock.mockClear();
+  mocks.startAutosaveMock.mockClear();
 });
 
 it("starts idle with an empty transcript", () => {
@@ -29,22 +40,37 @@ it("starts idle with an empty transcript", () => {
   expect(result.current.liveText).toBe("");
 });
 
-it("toggles listening state", () => {
+it("toggles listening state", async () => {
   const { result } = renderHook(() => useTranscription());
 
-  act(() => result.current.start());
+  await act(async () => {
+    await result.current.start();
+  });
   expect(result.current.isListening).toBe(true);
 
   act(() => result.current.stop());
   expect(result.current.isListening).toBe(false);
 });
 
-it("starts and stops recognition", () => {
+it("starts and stops recognition", async () => {
   const { result } = renderHook(() => useTranscription());
 
-  act(() => result.current.start());
-  expect(startMock).toHaveBeenCalledTimes(1);
+  await act(async () => {
+    await result.current.start();
+  });
+  expect(mocks.startMock).toHaveBeenCalledTimes(1);
 
   act(() => result.current.stop());
-  expect(stopMock).toHaveBeenCalledTimes(1);
+  expect(mocks.stopMock).toHaveBeenCalledTimes(1);
+});
+
+it("prompts for file selection on start when missing", async () => {
+  mocks.requestOutputFileMock.mockResolvedValueOnce(null);
+  const { result } = renderHook(() => useTranscription());
+
+  await act(async () => {
+    await result.current.start();
+  });
+
+  expect(mocks.requestOutputFileMock).toHaveBeenCalledTimes(1);
 });
