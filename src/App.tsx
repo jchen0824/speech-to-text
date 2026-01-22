@@ -1,9 +1,15 @@
+import Sidebar from "./components/Sidebar";
+import TopBar from "./components/TopBar";
+import TranscriptPane from "./components/TranscriptPane";
+
 function App() {
   return (
-    <div className="min-h-screen px-6 py-10">
-      <h1 className="text-3xl font-semibold text-slate-900">
-        Meeting Scribe
-      </h1>
+    <div className="flex min-h-screen flex-col bg-slate-50 text-slate-900">
+      <TopBar />
+      <main className="flex flex-1">
+        <TranscriptPane />
+        <Sidebar />
+      </main>
     </div>
   );
 }
