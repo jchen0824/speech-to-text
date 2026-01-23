@@ -4,6 +4,7 @@ import { buildRecognition } from "../lib/speechRecognition";
 import type { TranscriptItem } from "../types/transcript";
 
 const TOAST_DURATION_MS = 3000;
+const RESTART_DELAY_MS = 500;
 
 const formatTimestamp = (date = new Date()) =>
   date.toLocaleTimeString("en-US", {
@@ -34,9 +35,20 @@ const useTranscription = () => {
   const toastTimerRef = useRef<number | null>(null);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const transcriptRef = useRef("");
+  const shouldContinueRef = useRef(false);
+  const restartTimerRef = useRef<number | null>(null);
+
+  const clearRestartTimer = () => {
+    if (restartTimerRef.current) {
+      window.clearTimeout(restartTimerRef.current);
+      restartTimerRef.current = null;
+    }
+  };
 
   const start = useCallback(async () => {
     try {
+      shouldContinueRef.current = true;
+      clearRestartTimer();
       if (!fileHandle) {
         const handle = await requestOutputFile(fileName);
         if (handle) {
@@ -86,6 +98,19 @@ const useTranscription = () => {
       };
 
       recognitionRef.current.onend = () => {
+        if (shouldContinueRef.current) {
+          clearRestartTimer();
+          restartTimerRef.current = window.setTimeout(() => {
+            try {
+              recognitionRef.current?.start();
+              setIsListening(true);
+            } catch (error) {
+              console.error("Failed to restart recognition", error);
+            }
+          }, RESTART_DELAY_MS);
+          return;
+        }
+
         setIsListening(false);
       };
 
@@ -98,6 +123,8 @@ const useTranscription = () => {
   }, [fileHandle, fileName]);
 
   const stop = useCallback(() => {
+    shouldContinueRef.current = false;
+    clearRestartTimer();
     recognitionRef.current?.stop();
     setIsListening(false);
     setLiveText("");
@@ -183,6 +210,7 @@ const useTranscription = () => {
       if (toastTimerRef.current) {
         window.clearTimeout(toastTimerRef.current);
       }
+      clearRestartTimer();
     };
   }, []);
 

@@ -47,6 +47,7 @@ beforeEach(() => {
   mocks.recognition.onend = undefined;
   mocks.requestOutputFileMock.mockClear();
   mocks.startAutosaveMock.mockClear();
+  vi.useRealTimers();
 });
 
 it("starts idle with an empty transcript", () => {
@@ -118,4 +119,46 @@ it("does not restart autosave on transcript updates", async () => {
   });
 
   expect(mocks.startAutosaveMock).toHaveBeenCalledTimes(1);
+});
+
+it("restarts recognition when it ends unexpectedly", async () => {
+  vi.useFakeTimers();
+  mocks.requestOutputFileMock.mockResolvedValueOnce(null);
+  const { result } = renderHook(() => useTranscription());
+
+  await act(async () => {
+    await result.current.start();
+  });
+
+  act(() => {
+    mocks.recognition.onend?.();
+  });
+
+  await act(async () => {
+    await vi.runAllTimersAsync();
+  });
+
+  expect(mocks.recognition.start).toHaveBeenCalledTimes(2);
+});
+
+it("does not restart recognition after user stops", async () => {
+  vi.useFakeTimers();
+  mocks.requestOutputFileMock.mockResolvedValueOnce(null);
+  const { result } = renderHook(() => useTranscription());
+
+  await act(async () => {
+    await result.current.start();
+  });
+
+  act(() => result.current.stop());
+
+  act(() => {
+    mocks.recognition.onend?.();
+  });
+
+  await act(async () => {
+    await vi.runAllTimersAsync();
+  });
+
+  expect(mocks.recognition.start).toHaveBeenCalledTimes(1);
 });
