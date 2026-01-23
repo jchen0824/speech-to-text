@@ -10,6 +10,7 @@ const formatTimestamp = (date = new Date()) =>
   date.toLocaleTimeString("en-US", {
     hour: "2-digit",
     minute: "2-digit",
+    second: "2-digit",
     hour12: false,
   });
 
@@ -178,14 +179,10 @@ const useTranscription = () => {
     }
   }, [fileName]);
 
-  const transcriptText = useMemo(() => {
-    const finalized = items.map((item) => item.text).join("\n\n");
-    if (!liveText) {
-      return finalized;
-    }
-
-    return [finalized, `(${liveText})`].filter(Boolean).join("\n\n");
-  }, [items, liveText]);
+  const transcriptText = useMemo(
+    () => items.map((item) => `${item.time} ${item.text}`).join("\n"),
+    [items]
+  );
 
   useEffect(() => {
     transcriptRef.current = transcriptText;

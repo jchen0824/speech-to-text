@@ -12,6 +12,13 @@ type MockRecognition = {
   onend?: () => void;
 };
 
+type AutosaveArgs = {
+  getContent: () => string;
+  getFileHandle: () => FileSystemFileHandle | null;
+  onSaved?: () => void;
+  intervalMs?: number;
+};
+
 const mocks = vi.hoisted(() => {
   const recognition: MockRecognition = {
     start: vi.fn(),
@@ -121,6 +128,36 @@ it("does not restart autosave on transcript updates", async () => {
   });
 
   expect(mocks.startAutosaveMock).toHaveBeenCalledTimes(1);
+});
+
+it("saves finalized lines with timestamps", async () => {
+  vi.useFakeTimers();
+  vi.setSystemTime(new Date(2026, 0, 23, 19, 42, 5));
+
+  const handle = { createWritable: vi.fn() } as unknown as FileSystemFileHandle;
+  mocks.requestOutputFileMock.mockResolvedValueOnce(handle);
+
+  const { result } = renderHook(() => useTranscription());
+
+  await act(async () => {
+    await result.current.start();
+  });
+
+  act(() => {
+    mocks.recognition.onresult?.({
+      resultIndex: 0,
+      results: [
+        Object.assign([{ transcript: "Hello there" }], {
+          isFinal: true,
+        }),
+      ],
+    } as unknown as SpeechRecognitionEvent);
+  });
+
+  const autosaveArgs = mocks.startAutosaveMock.mock.calls[0][0] as AutosaveArgs;
+  expect(autosaveArgs.getContent()).toBe("19:42:05 Hello there");
+
+  vi.useRealTimers();
 });
 
 it("restarts recognition when it ends unexpectedly", async () => {
