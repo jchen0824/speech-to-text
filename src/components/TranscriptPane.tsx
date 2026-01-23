@@ -7,7 +7,16 @@ type TranscriptPaneProps = {
   liveText?: string;
 };
 
+const formatTodayLabel = (date = new Date()) => {
+  const formatted = date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+  });
+  return `Today, ${formatted}`;
+};
+
 const TranscriptPane = ({ items = [], liveText = "" }: TranscriptPaneProps) => {
+  const todayLabel = formatTodayLabel();
   return (
     <section className="relative flex flex-1 flex-col min-w-0 bg-background-light dark:bg-background-dark">
       <div className="flex-1 overflow-y-auto p-4 md:p-8 lg:px-12 scroll-smooth">
@@ -15,7 +24,7 @@ const TranscriptPane = ({ items = [], liveText = "" }: TranscriptPaneProps) => {
           <div className="flex items-center gap-4 py-4">
             <div className="h-px bg-slate-300 dark:bg-slate-700 flex-1" />
             <span className="text-xs font-medium text-slate-500 uppercase tracking-wider">
-              Today, Oct 24
+              {todayLabel}
             </span>
             <div className="h-px bg-slate-300 dark:bg-slate-700 flex-1" />
           </div>

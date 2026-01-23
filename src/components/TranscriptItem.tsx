@@ -11,7 +11,7 @@ const TranscriptItem = ({ item }: TranscriptItemProps) => {
         <span className="text-xs text-slate-400 font-mono">{item.time}</span>
       </div>
       <div className="flex-1">
-        <p className="text-slate-800 dark:text-slate-100 text-base md:text-lg leading-relaxed">
+        <p className="text-slate-900 dark:text-slate-100 text-base md:text-lg leading-relaxed">
           {item.text}
         </p>
       </div>
