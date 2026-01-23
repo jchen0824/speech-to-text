@@ -56,6 +56,8 @@ it("starts idle with an empty transcript", () => {
   expect(result.current.isListening).toBe(false);
   expect(result.current.items).toEqual([]);
   expect(result.current.liveText).toBe("");
+  expect(result.current.filePath).toBe("");
+  expect(result.current.fileName).toBe("");
 });
 
 it("toggles listening state", async () => {

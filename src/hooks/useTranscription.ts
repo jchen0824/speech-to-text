@@ -27,8 +27,8 @@ const useTranscription = () => {
   const [liveText, setLiveText] = useState("");
   const [toastMessage, setToastMessage] = useState("Transcript saved successfully");
   const [isToastOpen, setIsToastOpen] = useState(false);
-  const [filePath, setFilePath] = useState("/Users/Design/Documents/Notes");
-  const [fileName, setFileName] = useState("meeting-oct24.txt");
+  const [filePath, setFilePath] = useState("");
+  const [fileName, setFileName] = useState("");
   const [fileHandle, setFileHandle] = useState<FileSystemFileHandle | null>(
     null
   );
@@ -53,8 +53,8 @@ const useTranscription = () => {
         const handle = await requestOutputFile(fileName);
         if (handle) {
           setFileHandle(handle);
-          setFileName(handle.name || fileName);
-          setFilePath("Selected location");
+          setFileName(handle.name || fileName || "meeting.txt");
+          setFilePath("Selected file");
         }
       }
 
@@ -171,8 +171,8 @@ const useTranscription = () => {
       }
 
       setFileHandle(handle);
-      setFileName(handle.name || fileName);
-      setFilePath("Selected location");
+      setFileName(handle.name || fileName || "meeting.txt");
+      setFilePath("Selected file");
     } catch (error) {
       console.error("Failed to select file", error);
     }
